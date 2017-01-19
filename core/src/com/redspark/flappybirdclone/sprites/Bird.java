@@ -8,53 +8,37 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Red on 19/01/2017.
  */
 
-public class Bird {
+public class Bird extends GameObject {
     private static final int GRAVITY = -15;
     private static final int MOVEMENT = 100;
-    private Vector2 position;
+
     private Vector2 velocity;
-    private Texture bird;
-    private Rectangle bounds;
 
     public Bird(int x, int y){
-        position = new Vector2(x, y);
+        setPosition(new Vector2(x, y));
+        setTexture(new Texture("Bird.png"));
+        setBounds(new Rectangle(x, y, getTexture().getWidth(), getTexture().getHeight()));
         velocity = new Vector2(0, 0);
-
-        bird = new Texture("Bird.png");
-
-        bounds = new Rectangle(x, y, bird.getWidth(), bird.getHeight());
     }
-    public void update(float deltaTime){
+    @Override
+    public void reposition(float deltaTime){
 
-        if(position.y > 0)
+        if(getPosition().y > 0)
             velocity.add(0, GRAVITY);
         velocity.scl(deltaTime);
-        position.add(MOVEMENT*deltaTime, velocity.y);
+        getPosition().add(MOVEMENT*deltaTime, velocity.y);
 
-        if(position.y < 0)
-            position.y = 0;
+        if(getPosition().y < 0)
+            getPosition().y = 0;
 
         velocity.scl(1/deltaTime);
 
-        bounds.setPosition(position.x, position.y);
+        getBounds().setPosition(getPosition().x, getPosition().y);
 
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public Texture getBirdTexture() {
-        return bird;
     }
 
     public void jump(){
         velocity.y = 250;
     }
-    public Rectangle getBounds(){
-        return  bounds;
-    }
-    public void dispose(){
-        bird.dispose();
-    }
+
 }

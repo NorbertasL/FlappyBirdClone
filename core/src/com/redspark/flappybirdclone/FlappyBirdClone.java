@@ -32,7 +32,6 @@ public class FlappyBirdClone extends ApplicationAdapter {
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 	}
-	
 	@Override
 	public void dispose () {
 		batch.dispose();

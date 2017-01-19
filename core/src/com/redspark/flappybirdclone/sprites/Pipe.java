@@ -10,7 +10,7 @@ import java.util.Random;
  * Created by Red on 19/01/2017.
  */
 
-public class Pipe {
+public class Pipe extends GameObject{
     private static final int FLUCTUATION = 130;
     private static final int PIPE_GAP = 100;
     private static final int LOWEST_OPENING = 120;
@@ -18,7 +18,7 @@ public class Pipe {
 
     private Texture topPipe, botPipe;
     private Vector2 posTopPipe, posBotPipe;
-    private Rectangle boundsTop, boundsBot;
+     private Rectangle boundsTop, boundsBot;
 
     private Random random;
 
@@ -51,6 +51,7 @@ public class Pipe {
         return posBotPipe;
     }
 
+    @Override
     public void reposition(float x){
         posTopPipe.set(x, random.nextInt(FLUCTUATION) + PIPE_GAP + LOWEST_OPENING);
         posBotPipe.set(x, posTopPipe.y - PIPE_GAP - botPipe.getHeight());
@@ -59,10 +60,12 @@ public class Pipe {
         boundsBot.setPosition(posBotPipe.x, posBotPipe.y);
     }
 
-    public boolean collides(Rectangle player){
-        return player.overlaps(boundsTop) || player.overlaps(boundsBot);
+    @Override
+    public boolean collision(Rectangle player){
+       return player.overlaps(boundsTop) || player.overlaps(boundsBot);
     }
 
+    @Override
     public void dispose(){
         botPipe.dispose();
         topPipe.dispose();

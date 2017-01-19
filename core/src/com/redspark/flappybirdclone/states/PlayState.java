@@ -47,7 +47,7 @@ public class PlayState extends State {
     @Override
     public void update(float deltaTime) {
         handleInput();
-        bird.update(deltaTime);
+        bird.reposition(deltaTime);
         camera.position.x = bird.getPosition().x+80;
 
         for(Pipe pipe: pipes){
@@ -55,7 +55,7 @@ public class PlayState extends State {
                 pipe.reposition(pipe.getPosTopPipe().x + ((Pipe.PIPE_WIDTH+PIPE_SPACING)*PIPE_COUNT));
 
             }
-            if(pipe.collides(bird.getBounds())){
+            if(pipe.collision(bird.getBounds())){
                 gsm.set(new PlayState(gsm));
                 return;
             }
@@ -68,7 +68,7 @@ public class PlayState extends State {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(background, camera.position.x - (camera.viewportWidth/2), 0);
-        sb.draw(bird.getBirdTexture(), bird.getPosition().x, bird.getPosition().y);
+        sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
 
         for(Pipe pipe:pipes) {
             sb.draw(pipe.getTopPipe(), pipe.getPosTopPipe().x, pipe.getPosTopPipe().y);
