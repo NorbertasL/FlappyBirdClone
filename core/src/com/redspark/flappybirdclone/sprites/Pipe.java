@@ -16,59 +16,41 @@ public class Pipe extends GameObject{
     private static final int LOWEST_OPENING = 120;
     public static final int PIPE_WIDTH = 80;
 
-    private Texture topPipe, botPipe;
-    private Vector2 posTopPipe, posBotPipe;
-     private Rectangle boundsTop, boundsBot;
-
     private Random random;
+    private Pipe topPipe;
+    private boolean isTopPipe = true;
 
 
-    public Pipe(float x){
-        topPipe = new Texture("TopPipe.png");
-        botPipe = new Texture("BotPipe.png");
+    public Pipe(float x){//constructor for the Top Pipe
         random = new Random();
 
-        posTopPipe = new Vector2(x, random.nextInt(FLUCTUATION) + PIPE_GAP + LOWEST_OPENING);
-        posBotPipe = new Vector2(x, posTopPipe.y - PIPE_GAP - botPipe.getHeight());
+        setTexture(new Texture("TopPipe.png"));
+        setPosition(new Vector2(x, getRandomYpos()));
+        setBounds(new Rectangle(new Rectangle(getPosition().x,getPosition().y, getTexture().getWidth(), getTexture().getHeight())));
 
-        boundsTop = new Rectangle(posTopPipe.x, posTopPipe.y, topPipe.getWidth(), topPipe.getHeight());
-        boundsBot = new Rectangle(posBotPipe.x, posBotPipe.y, botPipe.getWidth(), botPipe.getHeight());
     }
-
-    public Texture getTopPipe() {
-        return topPipe;
-    }
-
-    public Texture getBotPipe() {
-        return botPipe;
-    }
-
-    public Vector2 getPosTopPipe() {
-        return posTopPipe;
-    }
-
-    public Vector2 getPosBotPipe() {
-        return posBotPipe;
+    public Pipe(Pipe topPipe){//Constructor for the Bot Pipe
+        this.topPipe = topPipe;
+        isTopPipe = false;//making sure the class know we are generating bot pipe
+        setTexture(new Texture("BotPipe.png"));//TODO check if i can just flipe the topPipe texture
+        setPosition(new Vector2(topPipe.getPosition().x, topPipe.getPosition().y - PIPE_GAP - getTexture().getHeight()));
+        setBounds(new Rectangle(getPosition().x, getPosition().y, getTexture().getWidth(), getTexture().getHeight()));
     }
 
     @Override
     public void reposition(float x){
-        posTopPipe.set(x, random.nextInt(FLUCTUATION) + PIPE_GAP + LOWEST_OPENING);
-        posBotPipe.set(x, posTopPipe.y - PIPE_GAP - botPipe.getHeight());
+        if(isTopPipe) {//rendering for top pipe
+            getPosition().set(x, random.nextInt(FLUCTUATION) + PIPE_GAP + LOWEST_OPENING);
+        }else {//rendering for bot pipe, because bot pipe position is relative to top pipe
+            getPosition().set(x, topPipe.getPosition().y - PIPE_GAP - getTexture().getHeight());
+        }
 
-        boundsTop.setPosition(posTopPipe.x, posTopPipe.y);
-        boundsBot.setPosition(posBotPipe.x, posBotPipe.y);
+        getBounds().setPosition(getPosition().x, getPosition().y);
+
+    }
+    private float getRandomYpos(){//gets a random y position for top pipe
+        return random.nextInt(FLUCTUATION) + PIPE_GAP + LOWEST_OPENING;
     }
 
-    @Override
-    public boolean collision(Rectangle player){
-       return player.overlaps(boundsTop) || player.overlaps(boundsBot);
-    }
-
-    @Override
-    public void dispose(){
-        botPipe.dispose();
-        topPipe.dispose();
-    }
 
 }

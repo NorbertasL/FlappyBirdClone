@@ -15,13 +15,13 @@ import com.redspark.flappybirdclone.sprites.Pipe;
 public class PlayState extends State {
 
     private static final int PIPE_SPACING = 125;
-    private static final int PIPE_COUNT = 4;
+    private static final int PIPE_COUNT = 4;//this is pairs of pipes
 
     private Bird bird;
     private Texture background;
 
-
-    private Array<Pipe> pipes;
+    private Array<Pipe> topPipes;
+    private Array<Pipe> botPipes;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -29,10 +29,13 @@ public class PlayState extends State {
         camera.setToOrtho(false, FlappyBirdClone.WIDTH/2, FlappyBirdClone.HEIGHT/2);
         background = new Texture("Background.png");
 
-        pipes = new Array<Pipe>();
+
+        topPipes = new Array<Pipe>();
+        botPipes = new Array<Pipe>();
 
         for(int i=1; i<=PIPE_COUNT; i++){
-            pipes.add(new Pipe(i*(PIPE_SPACING+Pipe.PIPE_WIDTH)));
+            topPipes.add(new Pipe(i*(PIPE_SPACING+Pipe.PIPE_WIDTH)));
+            botPipes.add(new Pipe(topPipes.peek()));
         }
     }
 
@@ -50,14 +53,17 @@ public class PlayState extends State {
         bird.reposition(deltaTime);
         camera.position.x = bird.getPosition().x+80;
 
-        for(Pipe pipe: pipes){
-            if(camera.position.x - (camera.viewportWidth/2) > pipe.getPosTopPipe().x+pipe.getTopPipe().getWidth()){
-                pipe.reposition(pipe.getPosTopPipe().x + ((Pipe.PIPE_WIDTH+PIPE_SPACING)*PIPE_COUNT));
+        for(int i = 0; i < topPipes.size; i++){
+            Pipe topPipe = topPipes.get(i);
+            Pipe botPipe = botPipes.get(i);
+            if(camera.position.x - (camera.viewportWidth/2) > topPipe.getPosition().x+topPipe.getTexture().getWidth()){
+                topPipe.reposition(topPipe.getPosition().x + ((Pipe.PIPE_WIDTH+PIPE_SPACING)*PIPE_COUNT));
+                botPipe.reposition(botPipe.getPosition().x + ((Pipe.PIPE_WIDTH+PIPE_SPACING)*PIPE_COUNT));
+
 
             }
-            if(pipe.collision(bird.getBounds())){
+            if(topPipe.collision(bird.getBounds()) || botPipe.collision(bird.getBounds())){
                 gsm.set(new PlayState(gsm));
-                return;
             }
         }
         camera.update();
@@ -70,9 +76,12 @@ public class PlayState extends State {
         sb.draw(background, camera.position.x - (camera.viewportWidth/2), 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
 
-        for(Pipe pipe:pipes) {
-            sb.draw(pipe.getTopPipe(), pipe.getPosTopPipe().x, pipe.getPosTopPipe().y);
-            sb.draw(pipe.getBotPipe(), pipe.getPosBotPipe().x, pipe.getPosBotPipe().y);
+        for(Pipe topPipe:topPipes) {//renders top pipes
+
+            sb.draw(topPipe.getTexture(), topPipe.getPosition().x, topPipe.getPosition().y);
+        }
+        for(Pipe botPipe:botPipes){//renders bot pipes
+            sb.draw(botPipe.getTexture(), botPipe.getPosition().x, botPipe.getPosition().y);
         }
 
 
@@ -85,8 +94,10 @@ public class PlayState extends State {
     public void dispose() {
         background.dispose();
         bird.dispose();
-        for(Pipe pipe:pipes)
-            pipe.dispose();
+        for(Pipe topPipe:topPipes)
+            topPipe.dispose();
+        for(Pipe botPipe:botPipes)
+            botPipe.dispose();
 
     }
 }
