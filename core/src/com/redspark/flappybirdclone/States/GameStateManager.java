@@ -1,4 +1,4 @@
-package com.redspark.flappybirdclone.States;
+package com.redspark.flappybirdclone.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

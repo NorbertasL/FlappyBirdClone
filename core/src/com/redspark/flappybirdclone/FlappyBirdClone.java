@@ -3,10 +3,9 @@ package com.redspark.flappybirdclone;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.redspark.flappybirdclone.States.GameStateManager;
-import com.redspark.flappybirdclone.States.MenuState;
+import com.redspark.flappybirdclone.states.GameStateManager;
+import com.redspark.flappybirdclone.states.MenuState;
 
 public class FlappyBirdClone extends ApplicationAdapter {
 
