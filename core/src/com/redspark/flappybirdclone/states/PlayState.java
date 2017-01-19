@@ -3,9 +3,11 @@ package com.redspark.flappybirdclone.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.redspark.flappybirdclone.FlappyBirdClone;
 import com.redspark.flappybirdclone.sprites.Bird;
+import com.redspark.flappybirdclone.sprites.Ground;
 import com.redspark.flappybirdclone.sprites.Pipe;
 
 /**
@@ -17,8 +19,11 @@ public class PlayState extends State {
     private static final int PIPE_SPACING = 125;
     private static final int PIPE_COUNT = 4;//this is pairs of pipes
 
+    private boolean gameOver = false;
+
     private Bird bird;
     private Texture background;
+    private Ground ground1, ground2;
 
     private Array<Pipe> topPipes;
     private Array<Pipe> botPipes;
@@ -29,6 +34,8 @@ public class PlayState extends State {
         camera.setToOrtho(false, FlappyBirdClone.WIDTH/2, FlappyBirdClone.HEIGHT/2);
         background = new Texture("Background.png");
 
+        ground1 = new Ground(new Vector2(camera.position.x - camera.viewportWidth/2, Ground.GROUND_Y_OFFSET));
+        ground2 = new Ground(new Vector2((camera.position.x - camera.viewportWidth/2)+ground1.getTexture().getWidth(), Ground.GROUND_Y_OFFSET));
 
         topPipes = new Array<Pipe>();
         botPipes = new Array<Pipe>();
@@ -49,6 +56,9 @@ public class PlayState extends State {
 
     @Override
     public void update(float deltaTime) {
+        if(gameOver) {//game restarts
+            gsm.set(new PlayState(gsm));
+        }
         handleInput();
         bird.reposition(deltaTime);
         camera.position.x = bird.getPosition().x+80;
@@ -63,9 +73,21 @@ public class PlayState extends State {
 
             }
             if(topPipe.collision(bird.getBounds()) || botPipe.collision(bird.getBounds())){
-                gsm.set(new PlayState(gsm));
+                gameOver =true;
             }
         }
+
+        if(camera.position.x -(camera.viewportWidth/2)>ground1.getPosition().x+ground1.getTexture().getWidth()){
+            ground1.reposition(ground1.getPosition().x + ground1.getTexture().getWidth() *2);
+        }
+        if(camera.position.x -(camera.viewportWidth/2)>ground2.getPosition().x+ground2.getTexture().getWidth()){
+            ground2.reposition(ground2.getPosition().x + ground2.getTexture().getWidth() *2);
+        }
+        if(bird.collision(ground1.getBounds()) || bird.collision(ground2.getBounds())) {
+            gameOver = true;
+        }
+
+
         camera.update();
     }
 
@@ -83,6 +105,8 @@ public class PlayState extends State {
         for(Pipe botPipe:botPipes){//renders bot pipes
             sb.draw(botPipe.getTexture(), botPipe.getPosition().x, botPipe.getPosition().y);
         }
+        sb.draw(ground1.getTexture(), ground1.getPosition().x, ground1.getPosition().y);
+        sb.draw(ground2.getTexture(), ground2.getPosition().x, ground2.getPosition().y);
 
 
         sb.end();
@@ -94,6 +118,9 @@ public class PlayState extends State {
     public void dispose() {
         background.dispose();
         bird.dispose();
+        ground1.dispose();
+        ground2.dispose();
+
         for(Pipe topPipe:topPipes)
             topPipe.dispose();
         for(Pipe botPipe:botPipes)

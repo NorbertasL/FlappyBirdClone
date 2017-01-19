@@ -14,7 +14,7 @@ public abstract class GameObject {
     private Vector2 position;
     private Rectangle bounds;
 
-    abstract public void reposition(float deltaTime);
+    abstract public void reposition(float x);
 
 
     public boolean collision(Rectangle object){

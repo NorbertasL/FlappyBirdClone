@@ -1,6 +1,8 @@
 package com.redspark.flappybirdclone.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Red on 19/01/2017.
@@ -8,11 +10,19 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Ground extends GameObject{
 
-    @Override
-    public void reposition(float deltaTime) {
-       // setPosition(new Vector2(x, y));
+    public static final int GROUND_Y_OFFSET = -30;
+
+    public Ground(Vector2 position){
         setTexture(new Texture("Ground.png"));
-       // setBounds(new Rectangle(x, y, getTexture().getWidth(), getTexture().getHeight()));
+        setPosition(position);
+        setBounds(new Rectangle(getPosition().x, getPosition().y, getTexture().getWidth(), getTexture().getHeight()));
+    }
+
+    @Override
+    public void reposition(float x) {
+        getPosition().set(x, GROUND_Y_OFFSET);
+        getBounds().setPosition(getPosition().x, getPosition().y);
+
 
     }
 }

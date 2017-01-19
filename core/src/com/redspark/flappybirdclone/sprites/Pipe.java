@@ -26,7 +26,7 @@ public class Pipe extends GameObject{
 
         setTexture(new Texture("TopPipe.png"));
         setPosition(new Vector2(x, getRandomYpos()));
-        setBounds(new Rectangle(new Rectangle(getPosition().x,getPosition().y, getTexture().getWidth(), getTexture().getHeight())));
+        setBounds(new Rectangle(getPosition().x,getPosition().y, getTexture().getWidth(), getTexture().getHeight()));
 
     }
     public Pipe(Pipe topPipe){//Constructor for the Bot Pipe
