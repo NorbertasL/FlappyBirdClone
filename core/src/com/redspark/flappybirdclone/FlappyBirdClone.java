@@ -2,6 +2,7 @@ package com.redspark.flappybirdclone;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.redspark.flappybirdclone.states.GameStateManager;
@@ -16,11 +17,20 @@ public class FlappyBirdClone extends ApplicationAdapter {
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 
+	private Music music;
+
 	
 	@Override
 	public void create () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		batch = new SpriteBatch();
+
+		music = Gdx.audio.newMusic(Gdx.files.internal("262259__shadydave__snowfall-final.mp3"));
+		music.setLooping(true);
+		music.setVolume(0.1f);
+		music.play();
+
+
 		gsm = new GameStateManager();
 		gsm.push(new MenuState(gsm));
 	}
@@ -35,5 +45,6 @@ public class FlappyBirdClone extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		music.dispose();
 	}
 }

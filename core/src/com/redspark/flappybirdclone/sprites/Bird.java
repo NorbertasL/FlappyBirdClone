@@ -1,5 +1,7 @@
 package com.redspark.flappybirdclone.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,6 +17,7 @@ public class Bird extends GameObject {
 
     private Vector2 velocity;
     private Animation animation;
+    private Sound flap;
 
     public Bird(int x, int y){
         setPosition(new Vector2(x, y));
@@ -22,6 +25,7 @@ public class Bird extends GameObject {
         animation = new Animation(super.getTexture(), 8, 1);
         setBounds(new Rectangle(x, y, (getTexture().getWidth()/animation.getFrameCount())-10, (getTexture().getHeight())-10));
         velocity = new Vector2(0, 0);
+        flap = Gdx.audio.newSound(Gdx.files.internal("Flap.ogg"));
     }
     @Override
     public void reposition(float deltaTime){
@@ -47,6 +51,13 @@ public class Bird extends GameObject {
 
     public void jump(){
         velocity.y = 250;
+        flap.play(0.3f);
+    }
+    @Override
+    public void dispose(){
+        super.dispose();
+        flap.dispose();
+
     }
 
 }
