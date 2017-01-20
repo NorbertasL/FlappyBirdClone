@@ -16,6 +16,7 @@ public class MenuState extends  State{
 
     public MenuState(GameStateManager gsm){
         super(gsm);
+        camera.setToOrtho(false, FlappyBirdClone.WIDTH/2, FlappyBirdClone.HEIGHT/2);
         background = new Texture("Background.png");
         playBtn = new Texture("Start.png");
     }
@@ -35,9 +36,10 @@ public class MenuState extends  State{
 
     @Override
     public void render(SpriteBatch sb) {
+        sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(background, 0, 0, FlappyBirdClone.WIDTH, FlappyBirdClone.HEIGHT);
-        sb.draw(playBtn, FlappyBirdClone.WIDTH/2-(playBtn.getWidth()/2), FlappyBirdClone.HEIGHT/2 -(playBtn.getHeight()/2));
+        sb.draw(background, 0, 0);
+        sb.draw(playBtn, camera.position.x - playBtn.getWidth()/2, camera.position.y);
         sb.end();
     }
 
