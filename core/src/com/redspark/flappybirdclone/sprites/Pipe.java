@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Pipe extends GameObject{
     private static final int FLUCTUATION = 130;
-    private static final int PIPE_GAP = 100;
+    private static final int PIPE_GAP = 130;
     private static final int LOWEST_OPENING = 120;
     public static final int PIPE_WIDTH = 80;
 

@@ -1,6 +1,7 @@
 package com.redspark.flappybirdclone.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,16 +14,18 @@ public class Bird extends GameObject {
     private static final int MOVEMENT = 100;
 
     private Vector2 velocity;
+    private Animation animation;
 
     public Bird(int x, int y){
         setPosition(new Vector2(x, y));
-        setTexture(new Texture("Bird.png"));
-        setBounds(new Rectangle(x, y, getTexture().getWidth(), getTexture().getHeight()));
+        setTexture(new Texture("BirdAnimation.png"));
+        animation = new Animation(super.getTexture(), 8, 1);
+        setBounds(new Rectangle(x, y, (getTexture().getWidth()/animation.getFrameCount())-10, (getTexture().getHeight())-10));
         velocity = new Vector2(0, 0);
     }
     @Override
     public void reposition(float deltaTime){
-
+        animation.update(deltaTime);
         if(getPosition().y > 0)
             velocity.add(0, GRAVITY);
         velocity.scl(deltaTime);
@@ -34,6 +37,11 @@ public class Bird extends GameObject {
         velocity.scl(1/deltaTime);
 
         getBounds().setPosition(getPosition().x, getPosition().y);
+
+    }
+    //@Override
+    public TextureRegion getTextureR(){
+        return animation.getFrame();
 
     }
 
